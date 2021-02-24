@@ -7,25 +7,27 @@ import lib.FileIO;
 
 import java.io.File;
 
+import java.io.FilenameFilter;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+
 
 public class DateRange {
     private static String foundFileContents;
     static String beginningDate;
     static String endDate;
+    static LocalDate dateEnd = Controller.getLocalDate();
 
     public static void search() {
-        beginningDate = ConsoleIO.promptForString("Beginning Date (dates HAVE to be separated by a dash(-) and in the order of MONTH, DAY, YEAR.) [ex. 2-15-2019]: ", false);
+        beginningDate = ConsoleIO.promptForString("Beginning Date (dates HAVE to be separated by a dash(-) and in the order of YEAR, MONTH, DAY.) [ex. 2019-02-19]: ", false);
         endDate = ConsoleIO.promptForString("End Date (optional): ", true);
+        if(endDate == null){
+            dateEnd = Controller.getLocalDate();
+        }
 
         String filePath = beginningDate + ".txt";
         File tempFile = new File(filePath);
         boolean exists = tempFile.exists();
+        LocalDate dateStart = LocalDate.parse(beginningDate);
 
 
         //Checks for files with only 1 date parameter
@@ -34,13 +36,29 @@ public class DateRange {
             System.out.println("We found an entry for that date! Here's what you wrote: " + foundFileContents);
         }
         //Checks for files between two date parameters
-        else if (Calendar.getInstance().after(beginningDate) && Calendar.getInstance().before(endDate)){
-            getResultsBetweenDates(beginningDate, endDate); //TODO what do I do here
+        else if (dateStart.isBefore(dateEnd) && dateEnd.isAfter(dateStart)){
+//            for(LocalDate date = dateStart; date.isBefore(dateEnd); date = date.plusDays(1)) {
+                String[] pathnames;
+                File f = new File("C://Users//wthacker//OneDrive - Neumont College of Computer Science//CSC150//ThackerW_L7RealDealJournal");
+
+                FilenameFilter filter = new FilenameFilter() {
+                    @Override
+                    public boolean accept(File f, String name) {
+                        return name.endsWith(".txt");
+                    }
+                };
+
+                pathnames = f.list(filter);
+                for(String pathname : pathnames){
+                    System.out.println(pathname);
+                    System.out.println("Here's what that entry said: " + FileIO.readTextFromFile(pathname) + "\n");
+
+                }
 
         }
         //When the search fails, an error is returned
         else {
-            System.out.println("We couldn't find any files for those dates. Please try again.");
+            System.out.println("\nWe couldn't find any files for those dates. Please try again.\n");
             search();
         }
 
@@ -51,9 +69,5 @@ public class DateRange {
         System.out.println("We found an entry for that date! Here's what you wrote: " + foundFileContents);
         FileIO.appendTextToFile(date, ConsoleIO.promptForString("Enter what you'd like to add: ", false));
         System.out.println();
-    }
-
-    private static List<LocalDate> getResultsBetweenDates(LocalDate beginningDate, LocalDate endDate){
-         return beginningDate.datesUntil(endDate).collect(Collectors.toList());
     }
 }

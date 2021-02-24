@@ -1,7 +1,6 @@
 package controllers;
 
 import lib.ConsoleIO;
-import lib.FileIO;
 import models.DateRange;
 import models.NewEntry;
 import models.ReviewEntries;
@@ -32,8 +31,6 @@ public class Controller {
                 Calendar.getInstance();
                 run();
                 break;
-            default:
-                run();
         }
     }
 

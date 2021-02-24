@@ -1,10 +1,13 @@
 package models;
 
 import controllers.Controller;
+import lib.ConsoleIO;
+import lib.FileIO;
 
 import javax.naming.directory.SearchResult;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.logging.ConsoleHandler;
 
 public class ReviewEntries {
 //This class searches through all journal entries with no parameters, from newest to oldest. DateRange is used for date parameters.
@@ -12,7 +15,8 @@ public class ReviewEntries {
 
     public static void overview(){
         directory();
-
+        String filePath = ConsoleIO.promptForString("Choose your journal entry: ", true);
+        System.out.println("Here's what your entry said: " + FileIO.readTextFromFile(filePath + ".txt") + "\n");
     }
 
 
