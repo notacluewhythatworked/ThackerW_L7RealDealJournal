@@ -5,7 +5,6 @@ import lib.ConsoleIO;
 import lib.FileIO;
 
 import java.io.File;
-import java.util.ArrayList;
 
 public class NewEntry {
 
@@ -41,7 +40,6 @@ public class NewEntry {
     private void backdatedEntry(String date){
         String contentBody = ConsoleIO.promptForString("\nEnter your journal entry: ", false);
         FileIO.appendTextToFile(date + ".txt", contentBody);
-
         System.out.println("\nWonderful! We've saved your journal entry.\n");
     }
 }

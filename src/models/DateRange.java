@@ -13,13 +13,11 @@ import java.time.LocalDate;
 
 public class DateRange {
     private static String foundFileContents;
-    static String beginningDate;
-    static String endDate;
-    static LocalDate dateEnd = Controller.getLocalDate();
+    private static LocalDate dateEnd = Controller.getLocalDate();
 
     public static void search() {
-        beginningDate = ConsoleIO.promptForString("Beginning Date (dates HAVE to be separated by a dash(-) and in the order of YEAR, MONTH, DAY.) [ex. 2019-02-19]: ", false);
-        endDate = ConsoleIO.promptForString("End Date (optional): ", true);
+        String beginningDate = ConsoleIO.promptForString("Beginning Date (dates HAVE to be separated by a dash(-) and in the order of YEAR, MONTH, DAY.) [ex. 2019-02-19]: ", false);
+        String endDate = ConsoleIO.promptForString("End Date (optional): ", true);
         if(endDate == null){
             dateEnd = Controller.getLocalDate();
         }
@@ -29,12 +27,12 @@ public class DateRange {
         boolean exists = tempFile.exists();
         LocalDate dateStart = LocalDate.parse(beginningDate);
 
-
         //Checks for files with only 1 date parameter
         if (exists) {
             FileIO.readTextFromFile(filePath);
             System.out.println("We found an entry for that date! Here's what you wrote: " + foundFileContents);
         }
+
         //Checks for files between two date parameters
         else if (dateStart.isBefore(dateEnd) && dateEnd.isAfter(dateStart)){
 //            for(LocalDate date = dateStart; date.isBefore(dateEnd); date = date.plusDays(1)) {
@@ -52,16 +50,13 @@ public class DateRange {
                 for(String pathname : pathnames){
                     System.out.println(pathname);
                     System.out.println("Here's what that entry said: " + FileIO.readTextFromFile(pathname) + "\n");
-
                 }
-
         }
         //When the search fails, an error is returned
         else {
             System.out.println("\nWe couldn't find any files for those dates. Please try again.\n");
             search();
         }
-
     }
 
     public static void search2(String date) {
